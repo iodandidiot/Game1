@@ -9,8 +9,5 @@ public class Restart : MonoBehaviour {
     {
         SceneManager.LoadScene("PlayerVsPC");
     }
-    public void OnRestart_battle()
-    {
-        SceneManager.LoadScene("PlayerVsPC_buttle");
-    }
+
 }

@@ -18,6 +18,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     public GameObject img;
     public int memScore1;
     public int memScore2;
+    public int maxLife;
     // Use this for initialization
     void Start()
     {
@@ -33,7 +34,14 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        if (PlayerPoints > maxLife)
+        {
+            EndGame_score(false);
+        }
+        if (CompPoints > maxLife)
+        {
+            EndGame_score(true);
+        }
     }
 
     private void Generate()
@@ -175,8 +183,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(1, i, dept);
-                        //if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints < memScore2 + PlayerPoints)) || bestScore1 == -9999))
-                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
+                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999 || memScore1 > maxLife))
                         {
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
@@ -224,8 +231,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(0, i, dept);
-                        //if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints > memScore2 + PlayerPoints)) || bestScore1 == -9999))
-                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
+                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999 || memScore2 > maxLife))
                         {
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
@@ -305,6 +311,20 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             img.gameObject.SetActive(true);
             restartButton.gameObject.SetActive(true);
         }
+    }
+
+    private void EndGame_score(bool win)
+    {
+        if (win)
+        {
+            endText.text = "You Win";
+        }
+        else
+        {
+            endText.text = "You Loose";
+        }
+        img.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
     }
 
     private bool IsCells(int x, int y)
