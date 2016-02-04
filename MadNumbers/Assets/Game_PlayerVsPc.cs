@@ -16,6 +16,8 @@ public class Game_PlayerVsPc : MonoBehaviour {
     public Text endText;
     public Button restartButton;
     public GameObject img;
+    public int memScore1;
+    public int memScore2;
     // Use this for initialization
     void Start()
     {
@@ -224,10 +226,115 @@ public class Game_PlayerVsPc : MonoBehaviour {
         return bestStep;
         
     }
+
+    public int AiChoice(int _turn, int _line, int dept)
+    {
+        dept++;
+        int bestScore1 = -9999;
+        int bestScore2 = -9999;
+        int bestChoice = -1;
+        int currScore1 = memScore1;
+        int currScore2 = memScore2;
+        int choice;
+        int temp;
+
+        for (int i = 0; i < poleRazmer; i++)
+        {
+            if (_turn == 0)//игрок
+            {
+                if (cells[_line, i] != null)
+                {
+                    cell_Pl_vs_Pc checkNumber = cells[_line, i].GetComponent<cell_Pl_vs_Pc>();
+                    if (Mathf.Abs(checkNumber.Number) == 99) continue;
+
+                    temp = checkNumber.Number;
+                    checkNumber.Number = 98;
+                    memScore1 = currScore1;
+                    memScore2 = currScore2 + temp;
+                    if (dept < maxDepth)
+                    {
+                        choice = AiChoice(1, i, dept);
+                        //if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints < memScore2 + PlayerPoints)) || bestScore1 == -9999))
+                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
+                        {
+                            bestScore1 = memScore1;
+                            bestScore2 = memScore2;
+                            bestChoice = i;
+                            if (choice == -1)
+                                bestScore2 += poleRazmer * 5;
+                        }
+
+                    }
+                    else
+                    {
+                        if ((memScore1 - memScore2 < bestScore1 - bestScore2))
+                        {
+                            bestScore1 = memScore1;
+                            bestScore2 = memScore2;
+                            bestChoice = i;
+                        }
+                    }
+                    checkNumber.Number = Mathf.Abs(temp) - 1;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                if (cells[i, _line] != null)
+                {
+                    cell_Pl_vs_Pc checkNumber = cells[i, _line].GetComponent<cell_Pl_vs_Pc>();
+                    if (Mathf.Abs(checkNumber.Number) == 99) continue;
+
+                    temp = checkNumber.Number;
+                    checkNumber.Number = 98;
+                    memScore1 = currScore1 + temp;
+                    memScore2 = currScore2;
+                    if (dept < maxDepth)
+                    {
+                        choice = AiChoice(0, i, dept);
+                        //if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints > memScore2 + PlayerPoints)) || bestScore1 == -9999))
+                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
+                        {
+                            bestScore1 = memScore1;
+                            bestScore2 = memScore2;
+                            bestChoice = i;
+                            if (choice == -1)
+                                bestScore1 += poleRazmer * 5;
+                        }
+
+                    }
+                    else
+                    {
+                        if ((memScore1 - memScore2 > bestScore1 - bestScore2))
+                        {
+                            bestScore1 = memScore1;
+                            bestScore2 = memScore2;
+                            bestChoice = i;
+                        }
+                    }
+                    checkNumber.Number = Mathf.Abs(temp) - 1;
+                }
+            }
+        }
+        if (bestScore1 != -9999)
+        {
+            memScore1 = bestScore1;
+            memScore2 = bestScore2;
+        }
+
+        return bestChoice;
+    }
     IEnumerator CompStep(int x)
     {
         yield return new WaitForSeconds(1f);
-        GameObject compChoice = cells[AIchoice(_turn, x, 1), x];
+        //GameObject compChoice = cells[AIchoice(_turn, x, 1), x];
+
+        memScore2 = CompPoints;
+        memScore1 = PlayerPoints;
+        GameObject compChoice = cells[AiChoice(_turn, x, 0), x];
         for(int i=0;i<10;i++)
         {
             SpriteRenderer _render=compChoice.GetComponent<SpriteRenderer>();
