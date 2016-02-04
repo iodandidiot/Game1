@@ -299,6 +299,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             restartButton.gameObject.SetActive(true);
         }
         else
+
         {
             if (PlayerPoints > CompPoints)
             {
