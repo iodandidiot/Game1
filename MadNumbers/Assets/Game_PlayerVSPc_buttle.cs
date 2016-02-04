@@ -285,21 +285,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
 
     private void EndGame(int _turn, int x, int y)
     {
-        if (IsCells(x, y))
-        {
-            if (_turn == 0)
-            {
-                endText.text = "You Win";
-            }
-            else
-            {
-                endText.text = "You Loose";
-            }
-            img.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-        }
-        else
-
+       
         {
             if (PlayerPoints > CompPoints)
             {
