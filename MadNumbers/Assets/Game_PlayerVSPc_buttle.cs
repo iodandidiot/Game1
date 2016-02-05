@@ -34,14 +34,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (PlayerPoints > maxLife)
-        {
-            EndGame_score(false);
-        }
-        if (CompPoints > maxLife)
-        {
-            EndGame_score(true);
-        }
+
     }
 
     private void Generate()
@@ -66,6 +59,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             if (number > 0)
             {
                 PlayerPoints += number;
+                if (PlayerPoints > 100) PlayerPoints = 100;
                 pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
             }
             else
@@ -79,6 +73,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             if (number > 0)
             {
                 CompPoints += number;
+                if (CompPoints > 100) CompPoints = 100;
                 pointsTextComp.text = string.Format("{0}", CompPoints);
             }
             else
@@ -183,7 +178,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(1, i, dept);
-                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999 || memScore1 > maxLife))
+                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
@@ -231,7 +226,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(0, i, dept);
-                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999 || memScore2 > maxLife))
+                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
