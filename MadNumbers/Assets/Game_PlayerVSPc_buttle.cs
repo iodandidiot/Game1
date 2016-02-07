@@ -7,8 +7,8 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     public GameObject cell;
     public int poleRazmer;
     GameObject[,] cells;
-    public int PlayerPoints;
-    public int CompPoints;
+    [Range (0,100)]public int PlayerPoints;
+    [Range(0, 100)]public int CompPoints;
     public Text pointsTextPlayer;
     public Text pointsTextComp;
     private int _turn = 1;
@@ -168,7 +168,8 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     if (temp > 0)
                     {
                         memScore1 = currScore1;
-                        memScore2 = currScore2 + temp;
+                        if (currScore2 + temp < 100) memScore2 = currScore2 + temp;
+                        else memScore2 = 100;
                     }
                     else
                     {
@@ -215,7 +216,8 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                     checkNumber.Number = 98;
                     if (temp > 0)
                     {
-                        memScore1 = currScore1 + temp;
+                        if (currScore1 + temp < 100) memScore1 = currScore1 + temp;
+                        else memScore1 = 100;
                         memScore2 = currScore2;
                     }
                     else
