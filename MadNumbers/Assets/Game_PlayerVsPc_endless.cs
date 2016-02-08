@@ -2,13 +2,14 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Game_PlayerVSPc_buttle : MonoBehaviour {
+public class Game_PlayerVsPc_endless : MonoBehaviour
+{
 
     public GameObject cell;
     public int poleRazmer;
     GameObject[,] cells;
-    [Range (0,100)]public int PlayerPoints;
-    [Range(0, 100)]public int CompPoints;
+    public int PlayerPoints;
+    public int CompPoints;
     public Text pointsTextPlayer;
     public Text pointsTextComp;
     private int _turn = 1;
@@ -18,7 +19,6 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     public GameObject img;
     public int memScore1;
     public int memScore2;
-    public int maxLife;
     // Use this for initialization
     void Start()
     {
@@ -34,7 +34,51 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        for (int i = 0; i < poleRazmer; i++)
+        {
+            if (isEmptyLine(i))
+            {
+                addLine(i);
+                break;
+            }
+        }
+    }
 
+    public bool isEmptyLine(int y)// Проверка строки на наличие ячейки
+    {
+        for (int j = 0; j < poleRazmer; j++)
+        {
+            if (cells[y, j] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addLine(int y)// Смещение и довабление новой строки
+    {
+        for (int i = y - 1; i >= 0; i--)//Смещение
+        {
+            for (int j = 0; j < poleRazmer; j++)
+            {
+                if (cells[i, j] != null)
+                {
+                    cells[i + 1, j] = cells[i, j];
+                    cells[i + 1, j].gameObject.transform.position = new Vector2(cells[i + 1, j].gameObject.transform.position.x, cells[i + 1, j].gameObject.transform.position.y - 1.4f);
+                    CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
+                    _cells.checkPosition(-1.4f);
+                }
+                
+            }
+        }
+        for (int j = 0; j < poleRazmer; j++)
+        {
+            cells[0, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - 0 * 1.4f), Quaternion.identity);
+            CellEndlessGenerate cellPozition = cells[0, j].GetComponent<CellEndlessGenerate>();
+            cellPozition.x = j;
+            cellPozition.y = 0;
+        }
     }
 
     private void Generate()
@@ -44,7 +88,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             for (int j = 0; j < poleRazmer; j++)
             {
                 cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
-                cell_battle cellPozition = cells[i, j].GetComponent<cell_battle>();
+                CellEndlessGenerate cellPozition = cells[i, j].GetComponent<CellEndlessGenerate>();
                 cellPozition.x = j;
                 cellPozition.y = i;
 
@@ -56,31 +100,13 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
     {
         if (_turn == 0)
         {
-            if (number > 0)
-            {
-                PlayerPoints += number;
-                if (PlayerPoints > maxLife) PlayerPoints = maxLife;
-                pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
-            }
-            else
-            {
-                CompPoints += number;
-                pointsTextComp.text = string.Format("{0}", CompPoints);
-            }
+            PlayerPoints += number;
+            pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
         }
         else
         {
-            if (number > 0)
-            {
-                CompPoints += number;
-                if (CompPoints > maxLife) CompPoints = maxLife;
-                pointsTextComp.text = string.Format("{0}", CompPoints);
-            }
-            else
-            {
-                PlayerPoints += number;
-                pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
-            }
+            CompPoints += number;
+            pointsTextComp.text = string.Format("{0}", CompPoints);
         }
 
     }
@@ -103,7 +129,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
 
             }
             _turn = 1;
-            if (isEnd) EndGame(0, x, y);
+            //if (isEnd) EndGame(0, x, y);
             //StartCoroutine(CompStep(x));
             return;
         }
@@ -120,7 +146,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                 }
             }
             _turn = 0;
-            if (isEnd) EndGame(1, x, y);
+            //if (isEnd) EndGame(1, x, y);
             return;
         }
     }
@@ -160,25 +186,17 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             {
                 if (cells[_line, i] != null)
                 {
-                    cell_battle checkNumber = cells[_line, i].GetComponent<cell_battle>();
+                    CellEndlessGenerate checkNumber = cells[_line, i].GetComponent<CellEndlessGenerate>();
                     if (Mathf.Abs(checkNumber.Number) == 99) continue;
 
                     temp = checkNumber.Number;
                     checkNumber.Number = 98;
-                    if (temp > 0)
-                    {
-                        memScore1 = currScore1;
-                        if (currScore2 + temp < maxLife) memScore2 = currScore2 + temp;
-                        else memScore2 = maxLife;
-                    }
-                    else
-                    {
-                        memScore1 = currScore1 + temp;
-                        memScore2 = currScore2;
-                    }
+                    memScore1 = currScore1;
+                    memScore2 = currScore2 + temp;
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(1, i, dept);
+                        //if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints < memScore2 + PlayerPoints)) || bestScore1 == -9999))
                         if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
@@ -209,25 +227,17 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             {
                 if (cells[i, _line] != null)
                 {
-                    cell_battle checkNumber = cells[i, _line].GetComponent<cell_battle>();
+                    CellEndlessGenerate checkNumber = cells[i, _line].GetComponent<CellEndlessGenerate>();
                     if (Mathf.Abs(checkNumber.Number) == 99) continue;
 
                     temp = checkNumber.Number;
                     checkNumber.Number = 98;
-                    if (temp > 0)
-                    {
-                        if (currScore1 + temp < maxLife) memScore1 = currScore1 + temp;
-                        else memScore1 = maxLife;
-                        memScore2 = currScore2;
-                    }
-                    else
-                    {
-                        memScore1 = currScore1;
-                        memScore2 = currScore2 + temp;
-                    }
+                    memScore1 = currScore1 + temp;
+                    memScore2 = currScore2;
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(0, i, dept);
+                        //if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints > memScore2 + PlayerPoints)) || bestScore1 == -9999))
                         if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
@@ -275,14 +285,27 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             _render.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-        cell_battle stepComp = compChoice.GetComponent<cell_battle>();
+        CellEndlessGenerate stepComp = compChoice.GetComponent<CellEndlessGenerate>();
         stepComp.OnMouseDown();
     }
 
 
     private void EndGame(int _turn, int x, int y)
     {
-       
+        if (IsCells(x, y))
+        {
+            if (_turn == 0)
+            {
+                endText.text = "You Win";
+            }
+            else
+            {
+                endText.text = "You Loose";
+            }
+            img.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
+        }
+        else
         {
             if (PlayerPoints > CompPoints)
             {
@@ -295,20 +318,6 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
             img.gameObject.SetActive(true);
             restartButton.gameObject.SetActive(true);
         }
-    }
-
-    private void EndGame_score(bool win)
-    {
-        if (win)
-        {
-            endText.text = "You Win";
-        }
-        else
-        {
-            endText.text = "You Loose";
-        }
-        img.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
     }
 
     private bool IsCells(int x, int y)
@@ -324,3 +333,4 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
         return false;
     }
 }
+
