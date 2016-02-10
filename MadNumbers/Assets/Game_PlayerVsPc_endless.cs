@@ -68,6 +68,8 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     cells[i + 1, j].gameObject.transform.position = new Vector2(cells[i + 1, j].gameObject.transform.position.x, cells[i + 1, j].gameObject.transform.position.y - 1.4f);
                     CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
                     _cells.checkPosition(-1.4f);
+                    _cells.x = j;
+                    _cells.y = i+1;
                 }
                 
             }
@@ -119,7 +121,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
-                if (cells[j, x] != null && j != y || cells[j, x] != null && start)
+                if (cells[j, x] != null/*&& j != y*/ || cells[j, x] != null && start)
                 {
                     isEnd = false;
                     //PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
@@ -137,7 +139,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         {
             for (int i = 0; i < poleRazmer; i++)
             {
-                if (cells[y, i] != null && i != x || cells[y, i] != null && start)
+                if (cells[y, i] != null/* && i != x*/ || cells[y, i] != null && start)
                 {
                     isEnd = false;
                     PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
