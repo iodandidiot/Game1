@@ -19,6 +19,9 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     public GameObject img;
     public int memScore1;
     public int memScore2;
+    int line;
+    int column;
+    bool _addLine;
     // Use this for initialization
     void Start()
     {
@@ -32,13 +35,13 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Check()
     {
         for (int i = 0; i < poleRazmer; i++)
         {
-            if (isEmptyLine(i))
+            if (isEmptyLine(i) && !_addLine)
             {
-                addLine(i);
+                StartCoroutine(addLine(i));
                 break;
             }
         }
@@ -56,8 +59,10 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         return true;
     }
 
-    public void addLine(int y)// Смещение и довабление новой строки
+    IEnumerator addLine(int y)// Смещение и довабление новой строки
     {
+        yield return new WaitForEndOfFrame();
+        _addLine = true;
         for (int i = y - 1; i >= 0; i--)//Смещение
         {
             for (int j = 0; j < poleRazmer; j++)
@@ -69,7 +74,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
                     _cells.checkPosition(-1.4f);
                     _cells.x = j;
-                    _cells.y = i+1;
+                    _cells.y = i+1;                    
                 }
                 
             }
@@ -80,7 +85,15 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             CellEndlessGenerate cellPozition = cells[0, j].GetComponent<CellEndlessGenerate>();
             cellPozition.x = j;
             cellPozition.y = 0;
+            if (_turn == 1 && j == column)
+            {
+                PolygonCollider2D cellColl = cells[0, j].AddComponent<PolygonCollider2D>();
+                SpriteRenderer _render = cells[0, j].GetComponent<SpriteRenderer>();
+                _render.color = Color.blue;
+            }
         }
+        _addLine = false;
+        Check();
     }
 
     private void Generate()
@@ -116,8 +129,11 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     {
         OffAllCollaider();
         bool isEnd = true;
+        line = y;
+        column = x;
         if (_turn == 0)
         {
+            Check();
             StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
@@ -133,7 +149,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             _turn = 1;
             //if (isEnd) EndGame(0, x, y);
             //StartCoroutine(CompStep(x));
-            return;
+            //return;
         }
         else
         {
@@ -148,8 +164,9 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                 }
             }
             _turn = 0;
+            Check();
             //if (isEnd) EndGame(1, x, y);
-            return;
+            //return;
         }
     }
     private void OffAllCollaider()
@@ -198,7 +215,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(1, i, dept);
-                        //if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints < memScore2 + PlayerPoints)) || bestScore1 == -9999))
+                        
                         if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
@@ -239,7 +256,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     if (dept < maxDepth)
                     {
                         choice = AiChoice(0, i, dept);
-                        //if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints > memScore2 + PlayerPoints)) || bestScore1 == -9999))
+                        
                         if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
