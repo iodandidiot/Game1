@@ -34,9 +34,13 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         restartButton.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Check()
+    public void OnCheck()
     {
+        StartCoroutine("Check");
+    }
+    IEnumerator Check()    
+    {
+        yield return new WaitForEndOfFrame();
         for (int i = 0; i < poleRazmer; i++)
         {
             if (isEmptyLine(i) && !_addLine)
@@ -74,7 +78,8 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
                     _cells.checkPosition(-1.4f);
                     _cells.x = j;
-                    _cells.y = i+1;                    
+                    _cells.y = i+1;
+                    cells[i, j] = null;
                 }
                 
             }
@@ -93,7 +98,6 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             }
         }
         _addLine = false;
-        Check();
     }
 
     private void Generate()
@@ -133,7 +137,6 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         column = x;
         if (_turn == 0)
         {
-            Check();
             StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
@@ -164,7 +167,6 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                 }
             }
             _turn = 0;
-            Check();
             //if (isEnd) EndGame(1, x, y);
             //return;
         }

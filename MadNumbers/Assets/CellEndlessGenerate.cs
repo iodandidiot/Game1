@@ -25,12 +25,15 @@ public class CellEndlessGenerate : MonoBehaviour
         chouseSprite.sprite = numbers[cellNumber];
         chouseSprite.sortingLayerName = "cell";
         chouseSprite.sortingOrder = 2;
+        NumbersThis.transform.parent = transform;
         ColorThis = (GameObject)Instantiate(Numbers, new Vector2(transform.position.x, transform.position.y), Quaternion.identity);
         SpriteRenderer chouseColor = ColorThis.AddComponent<SpriteRenderer>();
         color = Random.Range(0, 2);
         chouseColor.sprite = colors[color];
         chouseColor.sortingLayerName = "cell";
         chouseColor.sortingOrder = 1;
+        ColorThis.transform.parent = transform;
+
     }
     // Update is called once per frame
     void Update()
@@ -42,6 +45,7 @@ public class CellEndlessGenerate : MonoBehaviour
         Game_PlayerVsPc_endless gPole = pole.GetComponent<Game_PlayerVsPc_endless>();
         gPole.ChangePoints(this.Number);
         gPole.ChouseLine(x, y);
+        gPole.OnCheck();
         Destroy(ColorThis);
         Destroy(NumbersThis);
         Destroy(gameObject);
@@ -67,7 +71,7 @@ public class CellEndlessGenerate : MonoBehaviour
     public void checkPosition(float pos)
     {
         
-        NumbersThis.transform.position = new Vector2(NumbersThis.transform.position.x, NumbersThis.transform.position.y + pos);
-        ColorThis.transform.position = new Vector2(ColorThis.transform.position.x, ColorThis.transform.position.y + pos);
+        //NumbersThis.transform.position = new Vector2(NumbersThis.transform.position.x, NumbersThis.transform.position.y + pos);
+        //ColorThis.transform.position = new Vector2(ColorThis.transform.position.x, ColorThis.transform.position.y + pos);
     }
 }
