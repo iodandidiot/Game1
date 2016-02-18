@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Game_PlayerVsPc_endless : MonoBehaviour
+public class GamePuzzle : MonoBehaviour
 {
 
     public GameObject cell;
@@ -15,8 +15,6 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     private int _turn = 1;
     public int maxDepth;
     public Text endText;
-    int stepsPL=0;
-    public Text stepsPlayer;
     public Button restartButton;
     public GameObject img;
     public int memScore1;
@@ -27,21 +25,20 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        stepsPlayer.text = stepsPL.ToString();
         cells = new GameObject[poleRazmer, poleRazmer];
         Generate();
-        pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
-        pointsTextComp.text = string.Format("{0}", CompPoints);
-        ChouseLine(Random.Range(0, poleRazmer), Random.Range(0, poleRazmer), true);
-        img.gameObject.SetActive(false);
-        restartButton.gameObject.SetActive(false);
+        //pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
+        //pointsTextComp.text = string.Format("{0}", CompPoints);
+        //ChouseLine(Random.Range(0, poleRazmer), Random.Range(0, poleRazmer), true);
+        //img.gameObject.SetActive(false);
+        //restartButton.gameObject.SetActive(false);
     }
 
     public void OnCheck()
     {
         StartCoroutine("Check");
     }
-    IEnumerator Check()    
+    IEnumerator Check()
     {
         yield return new WaitForEndOfFrame();
         for (int i = 0; i < poleRazmer; i++)
@@ -81,10 +78,10 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
                     _cells.checkPosition(-1.4f);
                     _cells.x = j;
-                    _cells.y = i+1;
+                    _cells.y = i + 1;
                     cells[i, j] = null;
                 }
-                
+
             }
         }
         for (int j = 0; j < poleRazmer; j++)
@@ -103,18 +100,72 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         _addLine = false;
     }
 
-    private void Generate()
+    private void Generate(int step=0,int col=0,int str=0,int color=0,int number=0)
     {
-        for (int i = 0; i < poleRazmer; i++)
-        {
-            for (int j = 0; j < poleRazmer; j++)
-            {
-                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
-                CellEndlessGenerate cellPozition = cells[i, j].GetComponent<CellEndlessGenerate>();
-                cellPozition.x = j;
-                cellPozition.y = i;
+        //if (step == 0)
+        //{
+        //    int _col = Random.Range(0, poleRazmer);
+        //    int _str = Random.Range(0, poleRazmer);
+        //    int _number = Random.Range(1, 11);
+        //    int _color = Random.Range(0, 2);
+        //    int color;
+        //    cells[_str, _col] = (GameObject)Instantiate(cell, new Vector2(-3.5f + _col * 1.4f, 4 - _str * 1.4f), Quaternion.identity);
+        //    CellsPuzzle lastPoint = cells[_str, _col].GetComponent<CellsPuzzle>();
+        //    lastPoint.CreateCellsPuzzle(Mathf.Abs(_number), _color);
+        //    for (int i = 0; i < poleRazmer; i++)
+        //    {
+        //        if (cells[i, _col]==null)
+        //        {
+        //            cells[i, _col] = (GameObject)Instantiate(cell, new Vector2(-3.5f + _col * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+        //            CellsPuzzle Point = cells[i, _col].GetComponent<CellsPuzzle>();
+        //            Point.CreateCellsPuzzle(Mathf.Abs(_number), color = _color == 1 ? 0 : 1);
+        //        }                
+        //    }
+        //    Generate(1, 0, _str);
+        //}
+        //if (step != 0 && step % 2 != 0)
+        //{
+        //    int _col = Random.Range(0, poleRazmer);
+        //    int _str = str;
+        //    int _number = Random.Range(1, 11);
+        //    int _color = Random.Range(0, 2);
+        //    int color;
+        //    if (cells[_str, _col] == null)
+        //    {
+        //        cells[_str, _col] = (GameObject)Instantiate(cell, new Vector2(-3.5f + _col * 1.4f, 4 - _str * 1.4f), Quaternion.identity);
+        //        CellsPuzzle lastPoint = cells[_str, _col].GetComponent<CellsPuzzle>();
+        //        lastPoint.CreateCellsPuzzle(Mathf.Abs(_number), _color);
+        //    }
+        //    else
+        //    {
+        //        CellsPuzzle lastPoint = cells[_str, _col].GetComponent<CellsPuzzle>();
+        //        lastPoint.Number = lastPoint.Number + _number;
+        //    }
+        //    for (int i = 0; i < poleRazmer; i++)
+        //    {
+        //        if (cells[_str, i] == null)
+        //        {
+        //            cells[i, _col] = (GameObject)Instantiate(cell, new Vector2(-3.5f + _col * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+        //            CellsPuzzle Point = cells[_str, i].GetComponent<CellsPuzzle>();
+        //            Point.CreateCellsPuzzle(Mathf.Abs(_number), color = _color == 1 ? 0 : 1);
+        //        }
+        //    }
+        //}
 
+        if (step == 0)
+        {
+            int _number = Random.Range(1, 11);
+            int _color = Random.Range(0, 2);
+            for (int i = 0; i < poleRazmer; i++)
+            {
+                if (cells[i, col] == null)
+                {
+                    cells[i, col] = (GameObject)Instantiate(cell, new Vector2(-3.5f + col * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+                    CellsPuzzle Point = cells[i, col].GetComponent<CellsPuzzle>();
+                    Point.CreateCellsPuzzle(Mathf.Abs(_number), color = _color == 1 ? 0 : 1);
+                }
             }
+
         }
     }
 
@@ -140,15 +191,12 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         column = x;
         if (_turn == 0)
         {
-            stepsPL += 1;
-            stepsPlayer.text = stepsPL.ToString();
-            StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
                 if (cells[j, x] != null/*&& j != y*/ || cells[j, x] != null && start)
                 {
                     isEnd = false;
-                    //PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
+                    PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }
@@ -195,127 +243,6 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
 
     }
 
-    public int AiChoice(int _turn, int _line, int dept)
-    {
-        dept++;
-        int bestScore1 = -9999;
-        int bestScore2 = -9999;
-        int bestChoice = -1;
-        int currScore1 = memScore1;
-        int currScore2 = memScore2;
-        int choice;
-        int temp;
-
-        for (int i = 0; i < poleRazmer; i++)
-        {
-            if (_turn == 0)//игрок
-            {
-                if (cells[_line, i] != null)
-                {
-                    CellEndlessGenerate checkNumber = cells[_line, i].GetComponent<CellEndlessGenerate>();
-                    if (Mathf.Abs(checkNumber.Number) == 99) continue;
-
-                    temp = checkNumber.Number;
-                    checkNumber.Number = 98;
-                    memScore1 = currScore1;
-                    memScore2 = currScore2 + temp;
-                    if (dept < maxDepth)
-                    {
-                        choice = AiChoice(1, i, dept);
-                        
-                        if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
-                        {
-                            bestScore1 = memScore1;
-                            bestScore2 = memScore2;
-                            bestChoice = i;
-                            if (choice == -1)
-                                bestScore2 += poleRazmer * 5;
-                        }
-
-                    }
-                    else
-                    {
-                        if ((memScore1 - memScore2 < bestScore1 - bestScore2))
-                        {
-                            bestScore1 = memScore1;
-                            bestScore2 = memScore2;
-                            bestChoice = i;
-                        }
-                    }
-                    checkNumber.Number = Mathf.Abs(temp) - 1;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                if (cells[i, _line] != null)
-                {
-                    CellEndlessGenerate checkNumber = cells[i, _line].GetComponent<CellEndlessGenerate>();
-                    if (Mathf.Abs(checkNumber.Number) == 99) continue;
-
-                    temp = checkNumber.Number;
-                    checkNumber.Number = 98;
-                    memScore1 = currScore1 + temp;
-                    memScore2 = currScore2;
-                    if (dept < maxDepth)
-                    {
-                        choice = AiChoice(0, i, dept);
-                        
-                        if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints > memScore2 + CompPoints)) || bestScore1 == -9999))
-                        {
-                            bestScore1 = memScore1;
-                            bestScore2 = memScore2;
-                            bestChoice = i;
-                            if (choice == -1)
-                                bestScore1 += poleRazmer * 5;
-                        }
-
-                    }
-                    else
-                    {
-                        if ((memScore1 - memScore2 > bestScore1 - bestScore2))
-                        {
-                            bestScore1 = memScore1;
-                            bestScore2 = memScore2;
-                            bestChoice = i;
-                        }
-                    }
-                    checkNumber.Number = Mathf.Abs(temp) - 1;
-                }
-            }
-        }
-        if (bestScore1 != -9999)
-        {
-            memScore1 = bestScore1;
-            memScore2 = bestScore2;
-        }
-
-        return bestChoice;
-    }
-    IEnumerator CompStep(int x)
-    {
-        yield return new WaitForSeconds(1f);
-        //GameObject compChoice = cells[AIchoice(_turn, x, 1), x];
-
-        memScore2 = CompPoints;
-        memScore1 = PlayerPoints;
-        GameObject compChoice = cells[AiChoice(_turn, x, 0), x];
-        for (int i = 0; i < 10; i++)
-        {
-            SpriteRenderer _render = compChoice.GetComponent<SpriteRenderer>();
-            Color color = new Color(1, 0.92f, 0.016f, 1);
-            color.a -= i / 10;
-            _render.color = color;
-            yield return new WaitForSeconds(0.1f);
-        }
-        CellEndlessGenerate stepComp = compChoice.GetComponent<CellEndlessGenerate>();
-        stepComp.OnMouseDown();
-    }
-
-
     private void EndGame(int _turn, int x, int y)
     {
         if (IsCells(x, y))
@@ -359,4 +286,3 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         return false;
     }
 }
-
