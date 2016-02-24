@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/scenes/PlayerVsPC.unity
+- path: Assets/scenes/Puzzle.unity
   isLoaded: 1
   isActive: 1

@@ -45,7 +45,7 @@ public class CellEndlessGenerate : MonoBehaviour
         Game_PlayerVsPc_endless gPole = pole.GetComponent<Game_PlayerVsPc_endless>();
         gPole.ChangePoints(this.Number);
         gPole.ChouseLine(x, y);
-        gPole.OnCheck();
+        if (gPole._turn==1) gPole.OnCheck();
         Destroy(ColorThis);
         Destroy(NumbersThis);
         Destroy(gameObject);

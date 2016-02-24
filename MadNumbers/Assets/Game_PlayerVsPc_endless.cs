@@ -12,7 +12,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     public int CompPoints;
     public Text pointsTextPlayer;
     public Text pointsTextComp;
-    private int _turn = 1;
+    public int _turn = 1;
     public int maxDepth;
     public Text endText;
     int stepsPL=0;
@@ -69,6 +69,10 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     IEnumerator addLine(int y)// Смещение и довабление новой строки
     {
         yield return new WaitForEndOfFrame();
+        PlayerPoints -= 11;
+        CompPoints -= 11;
+        pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
+        pointsTextComp.text = string.Format("{0}", CompPoints);
         _addLine = true;
         for (int i = y - 1; i >= 0; i--)//Смещение
         {
@@ -172,6 +176,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                 }
             }
             _turn = 0;
+
             //if (isEnd) EndGame(1, x, y);
             //return;
         }
@@ -221,15 +226,14 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                     memScore2 = currScore2 + temp;
                     if (dept < maxDepth)
                     {
+
                         choice = AiChoice(1, i, dept);
-                        
                         if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + PlayerPoints < memScore2 + CompPoints)) || bestScore1 == -9999))
                         {
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
                             bestChoice = i;
-                            if (choice == -1)
-                                bestScore2 += poleRazmer * 5;
+                            if (choice == -1||memScore1 < 0) bestScore2 += poleRazmer * 5;                            
                         }
 
                     }
@@ -269,8 +273,9 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                             bestScore1 = memScore1;
                             bestScore2 = memScore2;
                             bestChoice = i;
-                            if (choice == -1)
+                            if (choice == -1 || memScore2 < 0)
                                 bestScore1 += poleRazmer * 5;
+
                         }
 
                     }
