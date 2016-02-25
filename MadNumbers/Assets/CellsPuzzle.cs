@@ -90,7 +90,7 @@ public class CellsPuzzle : MonoBehaviour
             if (cellNumber > 10)
             {
                 GamePuzzle gPole = pole.GetComponent<GamePuzzle>();
-                gPole.EndGame();
+                gPole.EndGame(36);
                 return;
             }
             if (value > 0)

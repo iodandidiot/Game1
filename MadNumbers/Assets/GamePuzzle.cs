@@ -8,8 +8,6 @@ public class GamePuzzle : MonoBehaviour
     public GameObject cell;
     public int poleRazmer;
     GameObject[,] cells;
-    public int PlayerPoints;
-    public int CompPoints;
     public Text StepText;
     private int _turn = 1;
     int stepsPL = -1;
@@ -19,12 +17,14 @@ public class GamePuzzle : MonoBehaviour
     public GameObject img;
     public int memScore1;
     public int memScore2;
+    public Image EndImage;
     int line;
     int column;
     bool _addLine;
     // Use this for initialization
     void Start()
     {
+        //EndImage
         StepText.text = stepsPL.ToString();
         cells = new GameObject[poleRazmer, poleRazmer];
         int str=Random.Range(0, poleRazmer);
@@ -115,6 +115,7 @@ public class GamePuzzle : MonoBehaviour
     }
     public void ChouseLine(int y, int x, int number, bool start = false)
     {
+        bool end = true;
         stepsPL++;
         StepText.text = stepsPL.ToString();
         if (_turn == 0)
@@ -133,6 +134,7 @@ public class GamePuzzle : MonoBehaviour
             {
                 if (cells[j, x] != null && j != y || cells[j, x] != null && start)
                 {
+                    end = false;
                     PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
@@ -161,12 +163,14 @@ public class GamePuzzle : MonoBehaviour
             {
                 if (cells[y, i] != null && i != x || cells[y, i] != null && start)
                 {
+                    end = false;
                     PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }
             }
         }
+        if (end) EndGame();
     }
 
     private void OffAllCollaider()
@@ -188,8 +192,10 @@ public class GamePuzzle : MonoBehaviour
 
     }
 
-    public void EndGame()
+    public void EndGame(int plusStep=0)
     {
+        stepsPL += plusStep;
+        StepText.text = stepsPL.ToString();
         StartCoroutine("lostCells");
     }
 
@@ -215,7 +221,7 @@ public class GamePuzzle : MonoBehaviour
                 Destroy(i.gameObject);
                 stepsPL++;
                 StepText.text = stepsPL.ToString();
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForSeconds(0.1f);
             }
             else
             {
