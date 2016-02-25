@@ -86,7 +86,13 @@ public class CellsPuzzle : MonoBehaviour
                 Destroy(gameObject);
                 return;
             }
-            cellNumber = Mathf.Abs(value) - 1;            
+            cellNumber = Mathf.Abs(value) - 1;
+            if (cellNumber > 10)
+            {
+                GamePuzzle gPole = pole.GetComponent<GamePuzzle>();
+                gPole.EndGame();
+                return;
+            }
             if (value > 0)
             {
                 SpriteRenderer chouseColor = ColorThis.GetComponent<SpriteRenderer>();
