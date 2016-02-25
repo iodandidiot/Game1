@@ -13,6 +13,7 @@ public class GamePuzzle : MonoBehaviour
     int stepsPL = -1;
     public int maxDepth;
     public Text endText;
+    public Text StepTextBig;
     public Button restartButton;
     public GameObject img;
     public int memScore1;
@@ -24,7 +25,7 @@ public class GamePuzzle : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //EndImage
+        EndImage.gameObject.SetActive(false);
         StepText.text = stepsPL.ToString();
         cells = new GameObject[poleRazmer, poleRazmer];
         int str=Random.Range(0, poleRazmer);
@@ -194,8 +195,10 @@ public class GamePuzzle : MonoBehaviour
 
     public void EndGame(int plusStep=0)
     {
+        EndImage.gameObject.SetActive(true);
         stepsPL += plusStep;
-        StepText.text = stepsPL.ToString();
+        StepText.gameObject.SetActive(false);
+        StepTextBig.text = stepsPL.ToString();
         StartCoroutine("lostCells");
     }
 
@@ -220,7 +223,7 @@ public class GamePuzzle : MonoBehaviour
             {
                 Destroy(i.gameObject);
                 stepsPL++;
-                StepText.text = stepsPL.ToString();
+                StepTextBig.text = stepsPL.ToString();
                 yield return new WaitForSeconds(0.1f);
             }
             else
