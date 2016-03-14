@@ -109,5 +109,14 @@ public class CellsPuzzle : MonoBehaviour
 
         }
     }
-    
+    public void changeColor()
+    {
+        StartCoroutine("ChangeColor");
+    }
+    private IEnumerator ChangeColor()
+    {
+        yield return new WaitForSeconds(1f);
+        SpriteRenderer _render = gameObject.GetComponent<SpriteRenderer>();
+        _render.color = Color.white;
+    }
 }

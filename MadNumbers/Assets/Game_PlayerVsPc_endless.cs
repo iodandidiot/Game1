@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Game_PlayerVsPc_endless : MonoBehaviour
 {
@@ -35,6 +36,29 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         ChouseLine(Random.Range(0, poleRazmer), Random.Range(0, poleRazmer), true);
         img.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (PlayerPoints < 0 && CompPoints < 0)
+        {
+            if (PlayerPoints > CompPoints)
+            {
+                EndGame(0);
+            }
+            else
+            {
+                EndGame(1);
+            }
+        }
+        if (PlayerPoints < 0 && CompPoints > 0) 
+        {
+            EndGame(1);
+        }
+        if (CompPoints < 0 && PlayerPoints>0 )
+        {
+            EndGame(0);
+        }
     }
 
     public void OnCheck()
@@ -149,36 +173,37 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
-                if (cells[j, x] != null/*&& j != y*/ || cells[j, x] != null && start)
+                if (cells[j, x] != null|| cells[j, x] != null && start)
                 {
-                    isEnd = false;
-                    //PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
+                    isEnd = false;                    
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
+                    isEnd = false;
                 }
 
             }
             _turn = 1;
-            //if (isEnd) EndGame(0, x, y);
+            if (isEnd) EndGame(0, x, y);
             //StartCoroutine(CompStep(x));
-            //return;
+            return;
         }
         else
         {
             for (int i = 0; i < poleRazmer; i++)
             {
-                if (cells[y, i] != null/* && i != x*/ || cells[y, i] != null && start)
+                if (cells[y, i] != null|| cells[y, i] != null && start)
                 {
                     isEnd = false;
                     PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
+                    isEnd = false;
                 }
             }
             _turn = 0;
 
-            //if (isEnd) EndGame(1, x, y);
-            //return;
+            if (isEnd) EndGame(1, x, y);
+            return;
         }
     }
     private void OffAllCollaider()
@@ -321,34 +346,21 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
     }
 
 
-    private void EndGame(int _turn, int x, int y)
+    private void EndGame(int _turn, int x = 0, int y = 0)
     {
-        if (IsCells(x, y))
+
+        if (_turn == 0)
         {
-            if (_turn == 0)
-            {
-                endText.text = "You Win";
-            }
-            else
-            {
-                endText.text = "You Loose";
-            }
-            img.gameObject.SetActive(true);
+            endText.text = "You Win";
             restartButton.gameObject.SetActive(true);
         }
         else
         {
-            if (PlayerPoints > CompPoints)
-            {
-                endText.text = "You Win";
-            }
-            else
-            {
-                endText.text = "You Loose";
-            }
-            img.gameObject.SetActive(true);
+            endText.text = "You Loose";
             restartButton.gameObject.SetActive(true);
         }
+        img.gameObject.SetActive(true);
+
     }
 
     private bool IsCells(int x, int y)
@@ -362,6 +374,11 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             else continue;
         }
         return false;
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("PlayerVsPC_endless");
     }
 }
 

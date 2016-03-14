@@ -122,15 +122,19 @@ public class GamePuzzle : MonoBehaviour
         if (_turn == 0)
         {
             _turn=1;
+            OffAllCollaider();
             for (int i = 0; i < poleRazmer; i++)
             {
                 if (cells[y,i] != null && i!=x)
                 {
                     CellsPuzzle Point = cells[y, i].GetComponent<CellsPuzzle>();
-                    Point.Number += number;                    
+                    Point.Number += number;
+                    SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
+                    _render.color = Color.yellow;
+                    Point.changeColor();
                 }                
             }
-            OffAllCollaider();
+
             for (int j = 0; j < poleRazmer; j++)
             {
                 if (cells[j, x] != null && j != y || cells[j, x] != null && start)
@@ -146,6 +150,7 @@ public class GamePuzzle : MonoBehaviour
         else
         {
             _turn = 0;
+            OffAllCollaider();
             if (!start)
             {
                 for (int i = 0; i < poleRazmer; i++)
@@ -154,12 +159,14 @@ public class GamePuzzle : MonoBehaviour
                     {
                         CellsPuzzle Point = cells[i, x].GetComponent<CellsPuzzle>();
                         Point.Number += number;
+                        SpriteRenderer _render = cells[i, x].GetComponent<SpriteRenderer>();
+                        _render.color = Color.yellow;
+                        Point.changeColor();
                     }
 
                 }
             }
             
-            OffAllCollaider();
             for (int i = 0; i < poleRazmer; i++)
             {
                 if (cells[y, i] != null && i != x || cells[y, i] != null && start)
@@ -168,6 +175,7 @@ public class GamePuzzle : MonoBehaviour
                     PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
+
                 }
             }
         }
