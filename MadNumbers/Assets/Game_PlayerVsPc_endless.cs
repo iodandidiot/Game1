@@ -173,7 +173,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
             StartCoroutine(CompStep(x));
             for (int j = 0; j < poleRazmer; j++)
             {
-                if (cells[j, x] != null|| cells[j, x] != null && start)
+                if (cells[j, x] != null && j!=y || cells[j, x] != null && start)
                 {
                     isEnd = false;                    
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
@@ -191,7 +191,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         {
             for (int i = 0; i < poleRazmer; i++)
             {
-                if (cells[y, i] != null|| cells[y, i] != null && start)
+                if (cells[y, i] != null && i!=x || cells[y, i] != null && start)
                 {
                     isEnd = false;
                     PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
