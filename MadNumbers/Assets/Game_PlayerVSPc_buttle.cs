@@ -43,7 +43,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
         {
             for (int j = 0; j < poleRazmer; j++)
             {
-                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.25f, 4 - i * 1.25f), Quaternion.identity);
                 cell_battle cellPozition = cells[i, j].GetComponent<cell_battle>();
                 cellPozition.x = j;
                 cellPozition.y = i;
@@ -114,7 +114,7 @@ public class Game_PlayerVSPc_buttle : MonoBehaviour {
                 if (cells[y, i] != null && i != x || cells[y, i] != null && start)
                 {
                     isEnd = false;
-                    PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
+                    BoxCollider2D cellColl = cells[y, i].AddComponent<BoxCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }

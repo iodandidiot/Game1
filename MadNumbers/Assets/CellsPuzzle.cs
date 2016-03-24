@@ -7,6 +7,7 @@ public class CellsPuzzle : MonoBehaviour
     public Sprite[] numbers;
     public Sprite[] colors;
     public GameObject Numbers;
+    public GameObject emptyCells;
     SpriteRenderer chouseSprite;
     public int x;
     public int y;

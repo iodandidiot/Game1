@@ -106,7 +106,7 @@ public class GamePuzzle : MonoBehaviour
         {
             for (int j = 0; j < poleRazmer; j++)
             {
-                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.25f, 4 - i * 1.25f), Quaternion.identity);
                 CellsPuzzle cellPozition = cells[i, j].GetComponent<CellsPuzzle>();
                 cellPozition.x = j;
                 cellPozition.y = i;
@@ -140,7 +140,7 @@ public class GamePuzzle : MonoBehaviour
                 if (cells[j, x] != null && j != y || cells[j, x] != null && start)
                 {
                     end = false;
-                    PolygonCollider2D cellColl = cells[j, x].AddComponent<PolygonCollider2D>();
+                    BoxCollider2D cellColl = cells[j, x].AddComponent<BoxCollider2D>();
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }
@@ -172,7 +172,7 @@ public class GamePuzzle : MonoBehaviour
                 if (cells[y, i] != null && i != x || cells[y, i] != null && start)
                 {
                     end = false;
-                    PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
+                    BoxCollider2D cellColl = cells[y, i].AddComponent<BoxCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
 

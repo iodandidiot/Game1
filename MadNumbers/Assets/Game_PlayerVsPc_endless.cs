@@ -105,9 +105,9 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                 if (cells[i, j] != null)
                 {
                     cells[i + 1, j] = cells[i, j];
-                    cells[i + 1, j].gameObject.transform.position = new Vector2(cells[i + 1, j].gameObject.transform.position.x, cells[i + 1, j].gameObject.transform.position.y - 1.4f);
+                    cells[i + 1, j].gameObject.transform.position = new Vector2(cells[i + 1, j].gameObject.transform.position.x, cells[i + 1, j].gameObject.transform.position.y - 1.25f);
                     CellEndlessGenerate _cells = cells[i + 1, j].GetComponent<CellEndlessGenerate>();
-                    _cells.checkPosition(-1.4f);
+                    _cells.checkPosition(-1.25f);
                     _cells.x = j;
                     _cells.y = i+1;
                     cells[i, j] = null;
@@ -117,7 +117,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         }
         for (int j = 0; j < poleRazmer; j++)
         {
-            cells[0, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - 0 * 1.4f), Quaternion.identity);
+            cells[0, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.25f, 4 - 0 * 1.25f), Quaternion.identity);
             CellEndlessGenerate cellPozition = cells[0, j].GetComponent<CellEndlessGenerate>();
             cellPozition.x = j;
             cellPozition.y = 0;
@@ -137,7 +137,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
         {
             for (int j = 0; j < poleRazmer; j++)
             {
-                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.25f, 4 - i * 1.25f), Quaternion.identity);
                 CellEndlessGenerate cellPozition = cells[i, j].GetComponent<CellEndlessGenerate>();
                 cellPozition.x = j;
                 cellPozition.y = i;
@@ -194,7 +194,7 @@ public class Game_PlayerVsPc_endless : MonoBehaviour
                 if (cells[y, i] != null && i!=x || cells[y, i] != null && start)
                 {
                     isEnd = false;
-                    PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
+                    BoxCollider2D cellColl = cells[y, i].AddComponent<BoxCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                     isEnd = false;

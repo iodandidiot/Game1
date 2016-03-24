@@ -7,6 +7,7 @@ public class CellEndlessGenerate : MonoBehaviour
     public Sprite[] numbers;
     public Sprite[] colors;
     public GameObject Numbers;
+    public GameObject emptyCells;
     public int x;
     public int y;
     GameObject pole;
@@ -48,6 +49,7 @@ public class CellEndlessGenerate : MonoBehaviour
         if (gPole._turn==1) gPole.OnCheck();
         Destroy(ColorThis);
         Destroy(NumbersThis);
+        GameObject emptyCell = (GameObject)Instantiate(emptyCells, this.transform.position, Quaternion.identity);      
         Destroy(gameObject);
     }
     public int Number

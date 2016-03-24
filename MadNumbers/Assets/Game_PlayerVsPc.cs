@@ -42,7 +42,7 @@ public class Game_PlayerVsPc : MonoBehaviour {
         {
             for (int j = 0; j < poleRazmer; j++)
             {
-                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.4f, 4 - i * 1.4f), Quaternion.identity);
+                cells[i, j] = (GameObject)Instantiate(cell, new Vector2(-3.5f + j * 1.25f, 4 - i * 1.25f), Quaternion.identity);
                 cell_Pl_vs_Pc cellPozition = cells[i, j].GetComponent<cell_Pl_vs_Pc>();
                 cellPozition.x = j;
                 cellPozition.y = i;
@@ -95,7 +95,7 @@ public class Game_PlayerVsPc : MonoBehaviour {
                 if (cells[y, i] != null && i != x || cells[y, i] != null && start)
                 {
                     isEnd = false;
-                    PolygonCollider2D cellColl = cells[y, i].AddComponent<PolygonCollider2D>();
+                    BoxCollider2D cellColl = cells[y, i].AddComponent<BoxCollider2D>();
                     SpriteRenderer _render = cells[y, i].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }
@@ -329,7 +329,7 @@ public class Game_PlayerVsPc : MonoBehaviour {
     }
     IEnumerator CompStep(int x)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         //GameObject compChoice = cells[AIchoice(_turn, x, 1), x];
 
         memScore2 = CompPoints;
