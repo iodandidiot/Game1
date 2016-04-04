@@ -98,11 +98,13 @@ public class CellsPuzzle : MonoBehaviour
             {
                 SpriteRenderer chouseColor = ColorThis.GetComponent<SpriteRenderer>();
                 chouseColor.sprite = colors[0];
+                color = 0;
             }
             else
             {
                 SpriteRenderer chouseColor = ColorThis.GetComponent<SpriteRenderer>();
                 chouseColor.sprite = colors[1];
+                color = 1;
             }
             chouseSprite = NumbersThis.GetComponent<SpriteRenderer>();
             print(cellNumber);
