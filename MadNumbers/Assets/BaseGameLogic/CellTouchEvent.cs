@@ -15,5 +15,6 @@ namespace Assets.BaseGameLogic
 
         public int Number { get; set; }
 
+        public Steps Step { get; set; }
     }
 }

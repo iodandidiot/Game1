@@ -68,9 +68,6 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
-    <Reference Include="UniRx">
-      <HintPath>Assets\UniRx.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AiChoice.cs" />
@@ -93,6 +90,15 @@
     <Compile Include="Assets\Restart_buttle.cs" />
     <Compile Include="Assets\cell_Pl_vs_Pc.cs" />
     <Compile Include="Assets\cell_battle.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Plugins\UniRx\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="MadNumbers.CSharp.Plugins.csproj">
+      <Project>{373dec0e-40d4-6bec-03b6-7b30f94c7e2c}</Project>
+      <Name>MadNumbers.CSharp.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

@@ -1,114 +1,111 @@
-﻿//using UnityEngine;
-//using System.Collections.Generic;
-//using System;
+﻿using System.Collections.Generic;
+using Assets.BaseGameLogic;
+using UnityEngine;
 
-//public class BaseGameLogic
-//{
-//    private Func<List<List<int>>, int, int> _workWithCell;
-//    private List<List<int>> _cells;
+public class BaseGameLogic
+{
+    private int _maxDepth;
+    private int _poleRazmer;
 
-//    BaseGameLogic(Func<List<List<int>>,int, int> workWithCell)
-//    {
-//        _workWithCell = workWithCell;
-//    }
+    public int MemScore1 { get; set; }
+    public int MemScore2 { get; set; }
 
-//    public virtual int ChoiceCell(int turn, int line, int dept)
-//    {
-//        dept++;
-//        var bestScore1 = -9999;
-//        var bestScore2 = -9999;
-//        var bestChoice = -1;
-//        var currScore1 = MemScore1;
-//        var currScore2 = MemScore2;
-//        int choice;
-//        int temp;
+    public BaseGameLogic(int maxDepth, int poleRazmer)
+    {
+        _maxDepth = maxDepth;
+        _poleRazmer = poleRazmer;
+    }
 
-//        for (int i = 0; i < _poleRazmer; i++)
-//        {
-//            if (turn == 0)//игрок
-//            {
-//                if (_cells[line, i] != null)
-//                {
-//                    var checkNumber = this._workWithCell(_cells, turn == 0);
-//                    if (Mathf.Abs(checkNumber) == 99) continue;
+    public virtual CellParam ChoiceCell(Steps step, int line, int dept, List<List<CellParam>> cellArray, int playerPoints, int compPoints)
+    {
+        dept++;
+        var bestScore1 = -9999;
+        var bestScore2 = -9999;
+        var bestChoice = new CellParam() { Id = -1 };
+        var currScore1 = MemScore1;
+        var currScore2 = MemScore2;
+        int temp;
 
-//                    temp = checkNumber.Number;
-//                    checkNumber.Number = 98;
-//                    MemScore1 = currScore1;
-//                    MemScore2 = currScore2 + temp;
-//                    if (dept < _maxDepth)
-//                    {
-//                        choice = Choice(1, i, dept);
-//                        //if ((memScore1 - memScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints < memScore2 + PlayerPoints)) || bestScore1 == -9999))
-//                        if ((MemScore1 - MemScore2 < bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && MemScore1 + PlayerPoints < MemScore2 + CompPoints)) || bestScore1 == -9999))
-//                        {
-//                            bestScore1 = MemScore1;
-//                            bestScore2 = MemScore2;
-//                            bestChoice = i;
-//                            if (choice == -1)
-//                                bestScore2 += _poleRazmer * 5;
-//                        }
+        for (int i = 0; i < _poleRazmer; i++)
+        {
+            if (step == Steps.player)
+            {
+                if (!cellArray[line][i].Touch)
+                {
+                    var checkNumber = cellArray[line][i].Number;
+                    if (Mathf.Abs(checkNumber) == 99) continue;
 
-//                    }
-//                    else
-//                    {
-//                        if ((MemScore1 - MemScore2 < bestScore1 - bestScore2))
-//                        {
-//                            bestScore1 = MemScore1;
-//                            bestScore2 = MemScore2;
-//                            bestChoice = i;
-//                        }
-//                    }
-//                    checkNumber.Number = Mathf.Abs(temp) - 1;
-//                }
+                    temp = checkNumber;
+                    checkNumber = 99;
+                    MemScore1 = currScore1;
+                    MemScore2 = currScore2 + temp;
+                    if (dept < _maxDepth)
+                    {
+                        var choice = ChoiceCell(Steps.ai, i, dept, cellArray, playerPoints, compPoints);
+                        if ((MemScore1 - MemScore2 < bestScore1 - bestScore2 && (choice.Id != -1 || (choice.Id == -1 && MemScore1 + playerPoints < MemScore2 + compPoints)) || bestScore1 == -9999))
+                        {
+                            bestScore1 = MemScore1;
+                            bestScore2 = MemScore2;
+                            bestChoice = cellArray[line][i];
+                            if (choice.Id == -1)
+                                bestScore2 += _poleRazmer * 5;
+                        }
+                    }
+                    else
+                    {
+                        if ((MemScore1 - MemScore2 < bestScore1 - bestScore2))
+                        {
+                            bestScore1 = MemScore1;
+                            bestScore2 = MemScore2;
+                            bestChoice = cellArray[line][i];
+                        }
+                    }
+                    checkNumber = temp;
+                }
+            }
+            else
+            {
+                if (!cellArray[i][line].Touch)
+                {
+                    var checkNumber = cellArray[i][line].Number;
+                    if (Mathf.Abs(checkNumber) == 99) continue;
 
-//            }
-//            else
-//            {
-//                if (_cells[i, line] != null)
-//                {
-//                    var checkNumber = this._workWithCell(_cells, turn == 0);
-//                    if (Mathf.Abs(checkNumber) == 99) continue;
+                    temp = checkNumber;
+                    checkNumber = 99;
+                    MemScore1 = currScore1 + temp;
+                    MemScore2 = currScore2;
+                    if (dept < _maxDepth)
+                    {
+                        var choice = ChoiceCell(Steps.player, i, dept, cellArray, playerPoints, compPoints);
+                        if ((MemScore1 - MemScore2 > bestScore1 - bestScore2 && (choice.Id != -1 || (choice.Id == -1 && MemScore1 + playerPoints > MemScore2 + compPoints)) || bestScore1 == -9999))
+                        {
+                            bestScore1 = MemScore1;
+                            bestScore2 = MemScore2;
+                            bestChoice = cellArray[i][line];
+                            if (choice.Id == -1)
+                                bestScore1 += _poleRazmer * 5;
+                        }
+                    }
+                    else
+                    {
+                        if ((MemScore1 - MemScore2 > bestScore1 - bestScore2))
+                        {
+                            bestScore1 = MemScore1;
+                            bestScore2 = MemScore2;
+                            bestChoice = cellArray[i][line];
+                        }
+                    }
+                    checkNumber = temp;
+                }
+            }
+        }
+        if (bestScore1 != -9999)
+        {
+            MemScore1 = bestScore1;
+            MemScore2 = bestScore2;
+        }
 
-//                    temp = checkNumber.Number;
-//                    checkNumber.Number = 98;
-//                    MemScore1 = currScore1 + temp;
-//                    MemScore2 = currScore2;
-//                    if (dept < _maxDepth)
-//                    {
-//                        choice = Choice(0, i, dept);
-//                        //if ((memScore1 - memScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && memScore1 + CompPoints > memScore2 + PlayerPoints)) || bestScore1 == -9999))
-//                        if ((MemScore1 - MemScore2 > bestScore1 - bestScore2 && (choice != -1 || (choice == -1 && MemScore1 + PlayerPoints > MemScore2 + CompPoints)) || bestScore1 == -9999))
-//                        {
-//                            bestScore1 = MemScore1;
-//                            bestScore2 = MemScore2;
-//                            bestChoice = i;
-//                            if (choice == -1)
-//                                bestScore1 += _poleRazmer * 5;
-//                        }
-
-//                    }
-//                    else
-//                    {
-//                        if ((MemScore1 - MemScore2 > bestScore1 - bestScore2))
-//                        {
-//                            bestScore1 = MemScore1;
-//                            bestScore2 = MemScore2;
-//                            bestChoice = i;
-//                        }
-//                    }
-//                    checkNumber.Number = Mathf.Abs(temp) - 1;
-//                }
-//            }
-//        }
-//        if (bestScore1 != -9999)
-//        {
-//            MemScore1 = bestScore1;
-//            MemScore2 = bestScore2;
-//        }
-
-//        return bestChoice;
-//    }
-
-//}
+        return bestChoice;
+    }
+}
 

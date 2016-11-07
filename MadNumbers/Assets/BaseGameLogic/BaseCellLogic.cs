@@ -10,6 +10,7 @@ namespace Assets.BaseGameLogic
         public int Id { get; set; }
         public int Number { get; set; }
         public bool Touch { get; set; }
+        public GameObject BaseCellObject { get; set; }
         public GameObject NumberGameObject { get; set; }
         public GameObject ColorGameObject { get; set; }
     }
@@ -44,6 +45,7 @@ namespace Assets.BaseGameLogic
                     CellInstance(i, j, id++);
                 }
             }
+            ChoiceCell(Steps.player, _cellParamList[Random.Range(0, _cellParamList.Capacity)][Random.Range(0, _cellParamList.Capacity)]);
         }
 
         private void CellInstance(int i, int j, int id)
@@ -57,8 +59,14 @@ namespace Assets.BaseGameLogic
             cell.Initialize(numberGameObject.GetComponent<SpriteRenderer>(), colorGameObject.GetComponent<SpriteRenderer>(), number);
             cell.mouseDown += OnCellClick;
 
-            _cellParamList[i].Add(new CellParam() { Id = cell.GetInstanceID(), Number = number, 
-                NumberGameObject=numberGameObject, ColorGameObject = colorGameObject});
+            _cellParamList[i].Add(new CellParam()
+            {
+                Id = cell.GetInstanceID(),
+                Number = number,
+                BaseCellObject = cell.gameObject,
+                NumberGameObject = numberGameObject,
+                ColorGameObject = colorGameObject
+            });
 
         }
 
@@ -71,7 +79,7 @@ namespace Assets.BaseGameLogic
 
         private void OnCellClick(int id)
         {
-            var cellEvent = CreateEvent(id);
+            var cellEvent = CreateEvent(id, Steps.player);
             if (CellTouch != null)
             {
                 CellTouch(cellEvent);
@@ -79,22 +87,27 @@ namespace Assets.BaseGameLogic
 
         }
 
-        private CellTouchEvent CreateEvent(int id)
+        private CellTouchEvent CreateEvent(int id, Steps step, bool start = false)
         {
+
             for (var i = 0; i < _cellParamList.Count; i++)
             {
                 for (int j = 0; j < _cellParamList[i].Capacity; j++)
                 {
                     if (_cellParamList[i][j].Id == id)
                     {
-                        _cellParamList[i][j].Touch = true;
+                        if (!start)
+                        {
+                            _cellParamList[i][j].Touch = true;
+                        }
 
                         return new CellTouchEvent()
                         {
                             cellParamList = _cellParamList,
                             X = i,
                             Y = j,
-                            Number = _cellParamList[i][j].Number
+                            Number = _cellParamList[i][j].Number,
+                            Step = step
                         };
                     }
                 }
@@ -102,5 +115,47 @@ namespace Assets.BaseGameLogic
             return new CellTouchEvent();
         }
 
+        public void ChoiceCell(Steps step, CellParam cell)
+        {
+
+            if (step == Steps.player)
+            {
+                var cellEvent = CreateEvent(cell.Id, step, true);
+                DeleteColider();
+                foreach (var cellChoise in _cellParamList[cellEvent.X])
+                {
+                    if (cellChoise.Touch)
+                        continue;
+                    cellChoise.BaseCellObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                    if (cellChoise.BaseCellObject.GetComponent<BoxCollider2D>() == null)
+                        cellChoise.BaseCellObject.AddComponent<BoxCollider2D>();
+                }
+
+            }
+            else
+            {
+                var cellEvent = CreateEvent(cell.Id, step, true);
+                DeleteColider();
+                foreach (var cellChoise in _cellParamList)
+                {
+                    if (cellChoise[cellEvent.Y].Touch)
+                        continue;
+                    cellChoise[cellEvent.Y].BaseCellObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                    if (cellChoise[cellEvent.Y].BaseCellObject.GetComponent<BoxCollider2D>() == null)
+                        cellChoise[cellEvent.Y].BaseCellObject.AddComponent<BoxCollider2D>();
+                }
+            }
+        }
+
+        private void DeleteColider()
+        {
+            _cellParamList.ForEach(cells =>
+                cells.ForEach(
+                    cell =>
+                        {
+                            if (cell != null && cell.BaseCellObject.GetComponent<BoxCollider2D>() != null) 
+                                cell.BaseCellObject.GetComponent<BoxCollider2D>();
+                        }));
+        }
     }
 }

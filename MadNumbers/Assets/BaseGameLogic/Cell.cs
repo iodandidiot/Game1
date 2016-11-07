@@ -11,7 +11,7 @@ public class Cell : MonoBehaviour
     public Sprite[] ColorsSprite { get; set; }
     public Sprite[] NumbersSprite { get; set; }
 
-    public Cell Load(Vector2 position, int number,int id)
+    public Cell Load(Vector2 position, int number, int id)
     {
         var cell = CellInstanse(position, id);
         cell.ColorsSprite = ColorsSprite;
@@ -32,8 +32,8 @@ public class Cell : MonoBehaviour
     {
         var cellInstanse = (GameObject)Instantiate(InstanseGameObject, new Vector2(position.x, position.y), Quaternion.identity);
         var cell = cellInstanse.AddComponent<Cell>();
-        cellInstanse.AddComponent<BoxCollider2D>();
-        cellInstanse.gameObject.name=String.Format("cell_{0}",id);
+        //cellInstanse.AddComponent<BoxCollider2D>();
+        cellInstanse.gameObject.name = String.Format("cell_{0}", id);
 
         return cell;
     }
@@ -51,20 +51,9 @@ public class Cell : MonoBehaviour
 
     public void OnMouseDown()
     {
-        if(mouseDown!=null)
+        if (mouseDown != null)
             mouseDown(this.GetInstanceID());
         DeInitialize();
-    }
-
-    private void CheckCell(int number)
-    {
-        var color = InstanseGameObject.GetComponent<SpriteRenderer>();
-        var numbers = InstanseGameObject.GetComponent<SpriteRenderer>();
-        numbers.sprite = NumbersSprite[Math.Abs(number)];
-        if (number > 0)
-            color.sprite = ColorsSprite[0];
-        else
-            color.sprite = ColorsSprite[1];
     }
 
     public void DeInitialize()

@@ -39,7 +39,7 @@ public class Game_PlayerVsPc : MonoBehaviour
         Generate();
         pointsTextPlayer.text = string.Format("{0}", PlayerPoints);
         pointsTextComp.text = string.Format("{0}", CompPoints);
-        ChouseLine(Random.Range(0, poleRazmer), Random.Range(0, poleRazmer),true);
+        ChouseLine(Random.Range(0, poleRazmer), Random.Range(0, poleRazmer), true);
         img.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
         _aichoice = new AiChoice(poleRazmer, cells, maxDepth);
@@ -80,10 +80,10 @@ public class Game_PlayerVsPc : MonoBehaviour
         }
 
     }
-    public void ChouseLine(int x, int y,bool start=false)
+    public void ChouseLine(int x, int y, bool start = false)
     {
         OffAllCollaider();
-        bool isEnd=true;
+        bool isEnd = true;
         if (_turn == 0)
         {
             StartCoroutine(CompStep(x));
@@ -96,10 +96,10 @@ public class Game_PlayerVsPc : MonoBehaviour
                     SpriteRenderer _render = cells[j, x].GetComponent<SpriteRenderer>();
                     _render.color = Color.blue;
                 }
-                
-            }            
+
+            }
             _turn = 1;
-            if (isEnd) EndGame(0,x,y);
+            if (isEnd) EndGame(0, x, y);
             //StartCoroutine(CompStep(x));
             return;
         }
@@ -116,7 +116,7 @@ public class Game_PlayerVsPc : MonoBehaviour
                 }
             }
             _turn = 0;
-            if (isEnd) EndGame(1,x,y);
+            if (isEnd) EndGame(1, x, y);
             return;
         }
     }
@@ -130,15 +130,15 @@ public class Game_PlayerVsPc : MonoBehaviour
                 if (cells[i, j] != null)
                 {
                     Collider2D cellColl = cells[i, j].GetComponent<Collider2D>();
-                    Destroy(cellColl);
+                    Destroy(cells[i, j].GetComponent<Collider2D>());
                     SpriteRenderer _render = cells[i, j].GetComponent<SpriteRenderer>();
                     _render.color = Color.white;
                 }
             }
         }
-        
+
     }
- 
+
     public int AiChoice(int _turn, int _line, int dept)
     {
         dept++;
@@ -278,9 +278,9 @@ public class Game_PlayerVsPc : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
     }
 
-    private void EndGame(int _turn,int x, int y)
+    private void EndGame(int _turn, int x, int y)
     {
-        if (IsCells(x,y))
+        if (IsCells(x, y))
         {
             if (_turn == 0)
             {
@@ -308,12 +308,12 @@ public class Game_PlayerVsPc : MonoBehaviour
         }
     }
 
-    private bool IsCells(int x,int y)
-    {        
+    private bool IsCells(int x, int y)
+    {
         foreach (GameObject i in cells)
         {
             if (i != null && i != cells[y, x])
-            {                
+            {
                 return true;
             }
         }
